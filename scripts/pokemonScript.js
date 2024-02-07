@@ -1,5 +1,6 @@
 import dotenv from "dotenv"; dotenv.config();
 import fs from "fs";
+import PokemonStatic from "../models/PokemonStatic.js";
 import mongoose from "mongoose";
 const { MONGO_URI } = process.env;
 
@@ -11,19 +12,13 @@ const run = async () => {
         console.log('Successfully connected to MongoDB.');
     
          //Read file JSON
-         fs.readFile('pokedex.json', 'utf8', (err, data) => {
-            if (err) {
-                console.error('There was an error while reading the file', err);
-                return;
-            }
-        
-        //JSON parsing
-            const pokedex = JSON.parse(data);
-        
-        //Take only the first genration from the array
+         const rawData = await fs.promises.readFile('pokedex.json', 'utf8');
+         const pokedex = JSON.parse(rawData);
+         
+        //Take only the first generation from the array
             const firstGenPokemon = pokedex.slice(0, 150);
         
-            const pokemon = pokedex.map(pokemon => ({
+            const pokemonData = firstGenPokemon.map(pokemon => ({
                 name: pokemon.name.english,
                 id: pokemon.id,
                 type: pokemon.type,
@@ -32,12 +27,19 @@ const run = async () => {
             }
         ));
 
+        //Save pokemon to database
+        for (const pokemon of pokemonData) {
+            try {
+                await PokemonStatic.create(pokemon)
+                console.log(`Pokemon "${pokemon.name}" saved to database with successfully`)
+            } catch (error) {
+                console.error(`Error saving Pokemon "${pokemon.name}" to database`, error);
+            }
+        };
 
-    })
     }catch(error){
 
         console.error(error);
-
     }
 }
 

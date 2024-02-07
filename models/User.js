@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import mongoose from "mongoose";
 import validator from "validator";
 import { StatusError } from "../lib/errorHelper.js";
@@ -41,10 +40,6 @@ const schema = new Schema({
     }
 });
 
-schema.statics.findByUsername = function(username){
-    return this.findOne({username});
-}
-
 schema.statics.signUp = async function (email, password){
 
     if(!isEmail(email)){
@@ -55,31 +50,30 @@ schema.statics.signUp = async function (email, password){
         throw StatusError(400, 'Password not strong enough.')
     }
     
-    const hashedPassword = await hashedPassword(password);
+    const emailExists = await this.exists({ email });
+    if(emailExists) {
+        const error = new Error(`${email} is already in use`)
+        error.statusCode = 401;
+        throw error;
+    }
 
-    const user = await this.create({email, password: hashPassword});
-
+    const hashedPassword = await hashPassword(password);
+    
+    const user = await this.create({ email, password: hashedPassword})
     return user;
 
 }
 
 schema.statics.logIn = async function (email, password){
 
-    const user = await this.findByUsername(username);
-
-    const fail = () => {
-        throw StatusError(401, 'Incorrect Email or Password');
-    }
-
-    if(!user){
-        fail();
-    }
-
+    const user = await this.findOne({ email });
     const passwordMatch = await comparePassword(password, user.password);
-    if(!passwordMatch){
-        fail();
+    if(!user || !passwordMatch) {
+        const error = new Error('Incorrect email or password')
+        error.statusCode = 401;
+        throw error;
     }
-
+    
     return user;
 }
 
