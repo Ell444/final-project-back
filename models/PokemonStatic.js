@@ -28,10 +28,6 @@ const schema = new Schema({
     }
 });
 
-schema.static.findById = function(id){
-    return this.findOne({id});
-};
-
 const PokemonStatic = model('PokemonStatic', schema);
 
 export default PokemonStatic;

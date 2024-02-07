@@ -5,6 +5,8 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 const { MONGO_URI } = process.env;
 const PORT = process.env.PORT || 3000;
+import pokemonStaticRoute from "./routes/pokemonStaticRoute.js";
+import personalPokemonRoute from "./routes/personalPokemonRoute.js";
 
 //creating my server
 const app = express();
@@ -14,6 +16,10 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(cors()) // imported but to use later in the project
 
+
+//Routes 
+app.use('/pokemons', pokemonStaticRoute);
+app.use('/custompokemons', personalPokemonRoute);
 //Database and server run
 mongoose.connect(MONGO_URI)
     .then(() => {
