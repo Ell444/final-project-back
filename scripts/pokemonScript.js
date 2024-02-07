@@ -1,5 +1,5 @@
-import dotenv from "dotenv";
 import fs from "fs";
+import dotenv from "dotenv"; dotenv.config();
 import PokemonStatic from "../models/PokemonStatic.js";
 import mongoose from "mongoose";
 const { MONGO_URI } = process.env;
@@ -10,14 +10,14 @@ const run = async () => {
         console.log('Successfully connected to MongoDB.');
 
         // Read JSON file
-        fs.readFile('pokedex.json', 'utf8', async (err, data) => {
+        fs.readFileSync('pokedex.json', 'utf8', async (err, data) => {
             if (err) {
                 console.error('Could not read the file:', err);
                 return;
             }
 
             const pokedex = JSON.parse(data); 
-            
+
             // Take only the first generation from the array
             const firstGenPokemon = pokedex.slice(0, 150);
 
@@ -35,18 +35,18 @@ const run = async () => {
                 const exists = await PokemonStatic.findOne({ id: p.id });
                 if (!exists) {
                     await PokemonStatic.create(p);
-                    console.log(`${p.name.english} created successfully.`);
+                    console.log(`${p.name} created successfully.`);
                 } else {
-                    console.log(`${p.name.english} already exists.`);
+                    console.log(`${p.name} already exists.`);
                 }
             }
         });
     } catch (error) {
         console.error(error);
-    } finally {
+    }/* finally {
         mongoose.disconnect();
-        console.log('Disconnected from MongoDB.');
-    }
+        console.log('MongoDB disconnected successfully.')
+    } */
 }
 
 run();
