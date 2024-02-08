@@ -22,7 +22,7 @@ router.get ('/:id', async (req, res) => {
         const pokemon = await PokemonStatic.findById(req.params.id);
         res.send(pokemon);
     }catch(error){
-        res.status(404).send(`Pokemon with ID ${_id} not found.`)
+        res.status(404).send(`Pokemon with ID ${req.params.id} not found.`)
     }
 })
 

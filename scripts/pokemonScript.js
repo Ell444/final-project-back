@@ -43,10 +43,7 @@ const run = async () => {
         });
     } catch (error) {
         console.error(error);
-    }/* finally {
-        mongoose.disconnect();
-        console.log('MongoDB disconnected successfully.')
-    } */
+    }
 }
 
 run();

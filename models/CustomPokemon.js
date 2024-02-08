@@ -1,19 +1,29 @@
 import mongoose from "mongoose";
+import PokemonStatic from "./PokemonStatic.js";
+
 const {Schema, SchemaTypes, model} = mongoose;
 
 const schema = new Schema({
     name: {
         type: String,
-        required: true,
+        /* required: true, */
     },
-    surname: {
+    id: {
+        type: Number,
+        /* required: true */
+    },
+    nickname: {
         type: String,
     },
-   owner: {
+    staticPokemonId: {
+        type: SchemaTypes.ObjectId,
+        ref: "PokemonStatic"
+    },
+   /*  owner: {
     type: SchemaTypes.ObjectId,
     ref: 'User',
     required: true
-   },
+   }, */
    level: {
     type: Number,
     required: true,
@@ -31,10 +41,10 @@ const schema = new Schema({
    },
     image: {
         type: String,
-        required: true
+        /* required: true */
     }
 });
 
-const PersonalPokemon = model('PersonalPokemon', schema);
+const CustomPokemon = model('CustomPokemon', schema);
 
-export default PersonalPokemon;
+export default CustomPokemon;
