@@ -6,7 +6,9 @@ import mongoose from "mongoose";
 const { MONGO_URI } = process.env;
 const PORT = process.env.PORT || 3000;
 import pokemonStaticRoute from "./routes/pokemonStaticRoute.js";
-import CustomPokemonRoute from "./routes/customPokemonRoute.js";
+import customPokemonRoute from "./routes/customPokemonRoute.js";
+import authorizationRoute from "./routes/authorizationRoute.js";
+import { requireAuth } from "./lib/authorizationHelper.js";
 
 //creating my server
 const app = express();
@@ -14,12 +16,14 @@ const app = express();
 //Generic middlewares
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(cors()) // imported but to use later in the project
+app.use(cors({origin: '*'})); 
 
 
 //Routes 
+app.use('/auth', authorizationRoute);
 app.use('/pokemons', pokemonStaticRoute);
-app.use('/custompokemons', CustomPokemonRoute);
+app.use(requireAuth());
+app.use('/custompokemons', customPokemonRoute);
 
 //Database and server run
 mongoose.connect(MONGO_URI)

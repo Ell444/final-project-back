@@ -53,7 +53,7 @@ router.put('/:id', async (req, res) => {
     try {
         const {nickname, attacks, level} = req.body;
         const updatedCustomPokemon = await CustomPokemon.findByIdAndUpdate(
-            req.params.id,
+           /*  req.params.id, */
             { nickname, attacks, level },
             { new: true }
         );

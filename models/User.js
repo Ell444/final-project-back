@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import validator from "validator";
 import { StatusError } from "../lib/errorHelper.js";
-import { comparePassword, hashPassword } from "../lib/authenticateHelper.js";
+import { comparePassword, hashPassword } from "../lib/authorizationHelper.js";
 const { isStrongPassword, isEmail} = validator;
 
 const strongPasswordOptions = {
@@ -17,14 +17,14 @@ const {Schema, SchemaTypes, model} = mongoose;
 const schema = new Schema({
     username: {
         type: String,
-        required: true,
         unique: true
     },
     email: {
-        type: Number,
+        type: String,
         trim: true,
         required: true,
-        unique: true
+        unique: true,
+        index: true
     },
     password: {
         type: String,
@@ -33,13 +33,16 @@ const schema = new Schema({
     subscription_date: {
         type: Date,
         default: () => Date.now() 
-    },
-    is_admin: {
-        type: Boolean,
-        default: false
     }
 });
 
+
+//Static find by Email
+schema.static.findByEmail = function({ email }){
+    return this.findOne(email)
+}
+
+//Static for SIGNUP
 schema.statics.signUp = async function (email, password){
 
     if(!isEmail(email)){
@@ -64,9 +67,11 @@ schema.statics.signUp = async function (email, password){
 
 }
 
+
+//Static for LOGIN
 schema.statics.logIn = async function (email, password){
 
-    const user = await this.findOne({ email });
+    const user = await this.findOne({email});
     const passwordMatch = await comparePassword(password, user.password);
     if(!user || !passwordMatch) {
         const error = new Error('Incorrect email or password')
