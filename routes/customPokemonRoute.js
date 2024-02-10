@@ -35,12 +35,12 @@ router.get('/:id', async (req, res) => {
 //POST a new custom pokemon
 router.post('/', async (req, res) => {
     try {
-        const {staticPokemonId, nickname, level, attacks} = req.body;
+        const {name, id, staticPokemonId, nickname, level, attacks, image} = req.body;
         const pokemonStatic = await PokemonStatic.findById(staticPokemonId);
         if (!pokemonStatic) {
             return res.status(404).send(`Pokemon static with ID ${staticPokemonId} not found.`);
         }
-        const customPokemon = new CustomPokemon({staticPokemonId, nickname, level, attacks});
+        const customPokemon = new CustomPokemon({name, id, staticPokemonId, nickname, level, attacks, image});
         await customPokemon.save();
         res.status(201).send(customPokemon)
     }catch (error) {
@@ -49,19 +49,35 @@ router.post('/', async (req, res) => {
 });
 
 // UPDATE single custom pokemon
-router.put('/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
+    if(!req.body || !Object.keys(req.body).length) {
+        res.status(400).send('You must enter a body with at least one property')
+    }
     try {
-        const {nickname, attacks, level} = req.body;
+        const { nickname, level, attacks } = req.body;
+        const updatedFields = {};
+        
+        if(nickname) {
+           updatedFields.nickname = nickname;
+        }
+        if(level) {
+            updatedFields.level = level;
+        }
+        if (attacks) {
+            updatedFields.attacks = attacks;
+        }
+        
         const updatedCustomPokemon = await CustomPokemon.findByIdAndUpdate(
-           /*  req.params.id, */
-            { nickname, attacks, level },
+            req.params.id,
+            updatedFields,
             { new: true }
         );
-        if(!updatedCustomPokemon) {
+
+        if (!updatedCustomPokemon) {
             return res.status(404).send(`Custom pokemon with ID ${req.params.id} not found.`)
         }
         res.status(200).send(updatedCustomPokemon);
-    }catch (error) {
+    }catch(error) {
         res.status(400).send(error.message);
     }
 });

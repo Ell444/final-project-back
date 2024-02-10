@@ -6,11 +6,11 @@ const {Schema, SchemaTypes, model} = mongoose;
 const schema = new Schema({
     name: {
         type: String,
-        /* required: true, */
+        required: true, 
     },
     id: {
         type: Number,
-        /* required: true */
+        required: true 
     },
     nickname: {
         type: String,
@@ -28,6 +28,8 @@ const schema = new Schema({
     type: Number,
     required: true,
     default: 5,
+    min: 2,
+    max: 100
    },
    attacks: {
     type: [String],
@@ -41,7 +43,7 @@ const schema = new Schema({
    },
     image: {
         type: String,
-        /* required: true */
+        required: true 
     }
 });
 
