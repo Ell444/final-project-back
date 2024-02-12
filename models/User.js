@@ -15,10 +15,6 @@ const strongPasswordOptions = {
 const {Schema, SchemaTypes, model} = mongoose;
 
 const schema = new Schema({
-    username: {
-        type: String,
-        unique: true
-    },
     email: {
         type: String,
         trim: true,

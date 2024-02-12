@@ -6,11 +6,11 @@ const {Schema, SchemaTypes, model} = mongoose;
 const schema = new Schema({
     name: {
         type: String,
-        required: true, 
+       required: true,  
     },
     id: {
         type: Number,
-        required: true 
+        required: true
     },
     nickname: {
         type: String,
@@ -19,11 +19,6 @@ const schema = new Schema({
         type: SchemaTypes.ObjectId,
         ref: "PokemonStatic"
     },
-   /*  owner: {
-    type: SchemaTypes.ObjectId,
-    ref: 'User',
-    required: true
-   }, */
    level: {
     type: Number,
     required: true,
@@ -43,7 +38,7 @@ const schema = new Schema({
    },
     image: {
         type: String,
-        required: true 
+        required: true
     }
 });
 

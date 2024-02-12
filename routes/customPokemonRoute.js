@@ -21,7 +21,6 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const customPokemon = await CustomPokemon.findById(req.params.id)
-        .populate('staticPokemonId')
         .select('-__v');
         if (!customPokemon) {
             return res.status(404).send(`Custom Pokemon with ID ${req.params.id} not found.` );
@@ -54,24 +53,22 @@ router.patch('/:id', async (req, res) => {
         res.status(400).send('You must enter a body with at least one property')
     }
     try {
-        const { nickname, level, attacks } = req.body;
-        const updatedFields = {};
-        
-        if(nickname) {
-           updatedFields.nickname = nickname;
-        }
-        if(level) {
-            updatedFields.level = level;
-        }
-        if (attacks) {
-            updatedFields.attacks = attacks;
-        }
-        
+        const updatedFields = req.body;
+        const newPokemon = {};
+        const pokemonArray = Object.entries(updatedFields);
+        console.log(pokemonArray)
+        pokemonArray.forEach(([key, value]) => {
+            console.log(key, value)
+            if( key === "nickname" || key === "level" || key === "attacks" ){
+                newPokemon[key] = value;
+            }
+        }) 
+      
         const updatedCustomPokemon = await CustomPokemon.findByIdAndUpdate(
             req.params.id,
-            updatedFields,
+            newPokemon,
             { new: true }
-        );
+        ); 
 
         if (!updatedCustomPokemon) {
             return res.status(404).send(`Custom pokemon with ID ${req.params.id} not found.`)
