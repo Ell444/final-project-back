@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 3000;
 import pokemonStaticRoute from "./routes/pokemonStaticRoute.js";
 import customPokemonRoute from "./routes/customPokemonRoute.js";
 import authorizationRoute from "./routes/authorizationRoute.js";
+import pokemonEncounterRoute from "./routes/pokemonEncounterRoute.js";
 import { requireAuth } from "./lib/authorizationHelper.js";
 
 //creating my server
@@ -24,6 +25,7 @@ app.use('/auth', authorizationRoute);
 app.use('/pokemons', pokemonStaticRoute);
 app.use(requireAuth());
 app.use('/custompokemons', customPokemonRoute);
+app.use('/pokemonencounter', pokemonEncounterRoute);
 
 //Database and server run
 mongoose.connect(MONGO_URI)

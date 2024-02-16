@@ -29,12 +29,12 @@ const schema = new Schema({
    attacks: {
     type: [String],
     required: true,
-    validate: {
+    /* validate: {
         validator: (val) => {
             return val.length === 2;
         },
         message: props => `${props.value} there has to be at least two attacks.`
-    }
+    } */
    },
     image: {
         type: String,
