@@ -2,6 +2,7 @@ import express from "express";
 import PokemonEncounter from "../models/pokemonEncounterSchema.js";
 import CustomPokemon from "../models/CustomPokemon.js";
 import PokemonStatic from "../models/PokemonStatic.js";
+import User from "../models/User.js";
 
 const router = express.Router();
 
@@ -26,47 +27,34 @@ router.get('/random', async (req, res) => {
     }
 });
 
-router.post('/capture', async (req, res) => {
+router.post('/capture/:userId', async (req, res) => {
     
     try{
-        const encounterId = req.body.encounterId;
-        const encounter = await PokemonEncounter
-            .findById(encounterId)
-            .populate('PokemonStaticId')
-        if(!encounter) {
-            return res.status(404).send('You did not encounter any pokemon.')
-        }
-        const customPokemon = new CustomPokemon({
-            name: encounter.PokemonStaticId.name,
-            id: encounter.PokemonStaticId.id,
-            staticPokemonId: encounter.PokemonStaticId._id,
-            level: 5, 
-            attacks: encounter.PokemonStaticId.attacks,
-            image: encounter.PokemonStaticId.image
-        });
-        await customPokemon.save();
-        await PokemonEncounter.findByIdAndDelete(encounterId);
-        res.status(201).send(customPokemon);
+       const { userId } = req.params;
+       const user = await User.findOne({_id: userId});
+       if(!user) {
+        throw new Error ('User not found');
+       };
+       if(!req.body) {
+        throw new Error ('You must send a valid body!');
+       }
+       const { name, id, image, _id, type } = req.body;
+       const cp = await CustomPokemon.create({
+        name,
+        id,
+        image,
+        type,
+        staticPokemonId: _id,
+       })
+       user.team.push(cp._id);
+       await user.save();
+       const userResponse = await User.findById(userId)
+       .populate('team', 'name level attacks nickname type');
+       res.send(userResponse);
     }catch(error) {
         console.error(error);
-        res.status(500).send('Server Error.')
+        res.status(500).send(error.message)
     }
-});
-
-router.patch('/runaway', async (req, res) => {
-
-    try{
-        const encounterId = req.body.encounterId;
-        const encounter = await PokemonEncounter.findById(encounterId);
-        if(!encounter) {
-            return res.status(404).send('You did not encounter any pokemon.')
-        }
-        await PokemonEncounter.findByIdAndUpdate(encounterId, { resolved: 'Escaped'})
-        res.status(200).send('Escaped successfully');
-    }catch (error) {
-        console.error(error);
-        res.status(500).send('Server Error.')
-    }
-})
+}); 
 
 export default router;

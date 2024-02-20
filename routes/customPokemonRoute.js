@@ -56,7 +56,6 @@ router.patch('/:id', async (req, res) => {
         const updatedFields = req.body;
         const newPokemon = {};
         const pokemonArray = Object.entries(updatedFields);
-        console.log(pokemonArray)
         pokemonArray.forEach(([key, value]) => {
             console.log(key, value)
             if( key === "nickname" || key === "level" || key === "attacks" ){
@@ -78,6 +77,7 @@ router.patch('/:id', async (req, res) => {
         res.status(400).send(error.message);
     }
 });
+
 
 // DELETE single custom pokemon
 router.delete('/:id', async (req, res) => {

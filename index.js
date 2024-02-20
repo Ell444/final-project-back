@@ -11,6 +11,7 @@ import authorizationRoute from "./routes/authorizationRoute.js";
 import pokemonEncounterRoute from "./routes/pokemonEncounterRoute.js";
 import { requireAuth } from "./lib/authorizationHelper.js";
 
+
 //creating my server
 const app = express();
 
@@ -23,9 +24,8 @@ app.use(cors({origin: '*'}));
 //Routes 
 app.use('/auth', authorizationRoute);
 app.use('/pokemons', pokemonStaticRoute);
-app.use(requireAuth());
-app.use('/custompokemons', customPokemonRoute);
-app.use('/pokemonencounter', pokemonEncounterRoute);
+app.use('/custompokemons', requireAuth(), customPokemonRoute);
+app.use('/pokemonencounter', requireAuth(), pokemonEncounterRoute);
 
 //Database and server run
 mongoose.connect(MONGO_URI)

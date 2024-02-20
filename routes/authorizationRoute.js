@@ -15,7 +15,7 @@ router.post('/signup', async (req, res) => {
         const user = await User.signUp(email, password)
         const token = generateToken(user._id)
         return res.status(201).send({
-            user: user.clean(),
+            user,
             token
         });
     }catch(error){
@@ -35,7 +35,7 @@ router.post('/login', async (req, res) => {
         const user = await User.logIn(email, password)
         const token = generateToken(user._id)
         return res.status(202).send({
-            user: user.clean(),
+            user,
             token
         });
     }catch(error){

@@ -1,12 +1,11 @@
 import mongoose from "mongoose";
-import PokemonStatic from "./PokemonStatic.js";
 
 const {Schema, SchemaTypes, model} = mongoose;
 
 const schema = new Schema({
     name: {
         type: String,
-       required: true,  
+        required: true,  
     },
     id: {
         type: Number,
@@ -14,27 +13,24 @@ const schema = new Schema({
     },
     nickname: {
         type: String,
+        default: null
     },
     staticPokemonId: {
         type: SchemaTypes.ObjectId,
         ref: "PokemonStatic"
     },
-   level: {
+    type: {
+        type: [String]
+    },
+    level: {
     type: Number,
-    required: true,
-    default: 5,
-    min: 2,
+    default: Math.ceil(Math.random() * 10),
+    min: 1,
     max: 100
    },
    attacks: {
     type: [String],
-    required: true,
-    /* validate: {
-        validator: (val) => {
-            return val.length === 2;
-        },
-        message: props => `${props.value} there has to be at least two attacks.`
-    } */
+    default: ['Azione', 'Rafforzatore']
    },
     image: {
         type: String,
