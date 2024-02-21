@@ -34,12 +34,12 @@ router.get('/:id', async (req, res) => {
 //POST a new custom pokemon
 router.post('/', async (req, res) => {
     try {
-        const {name, id, staticPokemonId, nickname, level, attacks, image} = req.body;
+        const {name, id, staticPokemonId, nickname, level, attacks, image, description} = req.body;
         const pokemonStatic = await PokemonStatic.findById(staticPokemonId);
         if (!pokemonStatic) {
             return res.status(404).send(`Pokemon static with ID ${staticPokemonId} not found.`);
         }
-        const customPokemon = new CustomPokemon({name, id, staticPokemonId, nickname, level, attacks, image});
+        const customPokemon = new CustomPokemon({name, id, staticPokemonId, nickname, level, attacks, image, description});
         await customPokemon.save();
         res.status(201).send(customPokemon)
     }catch (error) {

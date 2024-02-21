@@ -9,6 +9,7 @@ import pokemonStaticRoute from "./routes/pokemonStaticRoute.js";
 import customPokemonRoute from "./routes/customPokemonRoute.js";
 import authorizationRoute from "./routes/authorizationRoute.js";
 import pokemonEncounterRoute from "./routes/pokemonEncounterRoute.js";
+import userRoute from "./routes/userRoute.js";
 import { requireAuth } from "./lib/authorizationHelper.js";
 
 
@@ -26,6 +27,7 @@ app.use('/auth', authorizationRoute);
 app.use('/pokemons', pokemonStaticRoute);
 app.use('/custompokemons', requireAuth(), customPokemonRoute);
 app.use('/pokemonencounter', requireAuth(), pokemonEncounterRoute);
+app.use('/user', requireAuth(), userRoute);
 
 //Database and server run
 mongoose.connect(MONGO_URI)

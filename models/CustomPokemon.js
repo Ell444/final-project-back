@@ -22,6 +22,10 @@ const schema = new Schema({
     type: {
         type: [String]
     },
+    description: {
+        type: String,
+        required: true
+    },
     level: {
     type: Number,
     default: Math.ceil(Math.random() * 10),
@@ -30,7 +34,7 @@ const schema = new Schema({
    },
    attacks: {
     type: [String],
-    default: ['Azione', 'Rafforzatore']
+    default: ['Bite', 'Faint attack']
    },
     image: {
         type: String,

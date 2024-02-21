@@ -27,6 +27,7 @@ router.get('/random', async (req, res) => {
     }
 });
 
+//POST per cattiurare pokemon e salvarlo dentro lo user
 router.post('/capture/:userId', async (req, res) => {
     
     try{
@@ -38,18 +39,20 @@ router.post('/capture/:userId', async (req, res) => {
        if(!req.body) {
         throw new Error ('You must send a valid body!');
        }
-       const { name, id, image, _id, type } = req.body;
+       const { name, id, image, _id, type, description } = req.body;
        const cp = await CustomPokemon.create({
         name,
         id,
         image,
         type,
+        description,
         staticPokemonId: _id,
+        
        })
        user.team.push(cp._id);
        await user.save();
        const userResponse = await User.findById(userId)
-       .populate('team', 'name level attacks nickname type');
+       .populate('team', 'name level attacks nickname type description');
        res.send(userResponse);
     }catch(error) {
         console.error(error);
