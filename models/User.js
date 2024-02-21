@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import validator from "validator";
-import CustomPokemon from "./CustomPokemon.js";
 import { StatusError } from "../lib/errorHelper.js";
 import { comparePassword, hashPassword } from "../lib/authorizationHelper.js";
 const { isStrongPassword, isEmail} = validator;
@@ -71,7 +70,7 @@ schema.statics.signUp = async function (email, password){
 //Static for LOGIN
 schema.statics.logIn = async function (email, password){
 
-    const user = await this.findOne({email}).populate('team', 'name nickname level attacks type id image staticPokemonId');
+    const user = await this.findOne({email}).populate('team', 'name nickname level attacks type id image staticPokemonId description');
     const passwordMatch = await comparePassword(password, user.password);
     if(!user || !passwordMatch) {
         const error = new Error('Incorrect email or password')
