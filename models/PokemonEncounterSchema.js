@@ -6,8 +6,7 @@ const schema = new Schema({
         type: SchemaTypes.ObjectId,
         ref: 'PokemonStatic',
         required: true
-    },
-    
+    }, 
    resolved: {
     type: String,
     enum: ['capture', 'runaway'],

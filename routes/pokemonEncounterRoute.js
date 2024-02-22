@@ -1,5 +1,5 @@
 import express from "express";
-import PokemonEncounter from "../models/pokemonEncounterSchema.js";
+import PokemonEncounter from "../models/PokemonEncounterSchema.js";
 import CustomPokemon from "../models/CustomPokemon.js";
 import PokemonStatic from "../models/PokemonStatic.js";
 import User from "../models/User.js";
