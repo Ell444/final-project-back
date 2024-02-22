@@ -17,9 +17,9 @@ import { requireAuth } from "./lib/authorizationHelper.js";
 const app = express();
 
 //Generic middlewares
+app.use(cors({origin: '*'})); 
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(cors({origin: '*'})); 
 
 
 //Routes 
