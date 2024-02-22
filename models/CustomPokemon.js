@@ -13,7 +13,7 @@ const schema = new Schema({
     },
     nickname: {
         type: String,
-        default: null
+        default: ''
     },
     staticPokemonId: {
         type: SchemaTypes.ObjectId,
