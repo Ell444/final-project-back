@@ -3,6 +3,7 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
+//rotta GET per lo user che mi serve per avere sempre lo user col suo team
 router.get ('/:id', async (req, res) => {
     try {
         const user = await User.findById(req.params.id).populate('team', 'name nickname level description attacks type id image staticPokemonId');

@@ -5,14 +5,15 @@ import { generateToken } from "../lib/authorizationHelper.js";
 const router = express.Router();
 router.use(express.json());
 
+//Rotta per lo SIGNUP
 router.post('/signup', async (req, res) => {
     const { email, password } = req.body;
-    if(!email || !password) {
+    if(!email || !password) { //Controllo sull'utente, se non inserisce i dati neccessari, mando un errore e blocco lo signup
         return res.status(400).send('All field must be filled.')
     }
 
     try {
-        const user = await User.signUp(email, password)
+        const user = await User.signUp(email, password) //Generazione del Token per l'utente
         const token = generateToken(user._id)
         return res.status(201).send({
             user,
@@ -25,6 +26,7 @@ router.post('/signup', async (req, res) => {
     }
 })
 
+//Rotta per il LOGIN
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     if(!email || !password) {

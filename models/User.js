@@ -4,7 +4,7 @@ import { StatusError } from "../lib/errorHelper.js";
 import { comparePassword, hashPassword } from "../lib/authorizationHelper.js";
 const { isStrongPassword, isEmail} = validator;
 
-const strongPasswordOptions = {
+const strongPasswordOptions = { //Validatore per la password con i criteri minimi per avere una psw sicura
     minLength: 8,
     minLowerCase: 1,
     minUpperCase: 1,
@@ -37,12 +37,12 @@ const schema = new Schema({
     }]
 });
 
-//Static find by Email
+//Static find by Email - Mi serve per trovare l'utente attraverso la sua email
 schema.static.findByEmail = function({ email }){
     return this.findOne(email)
 }
 
-//Static for SIGNUP
+//Static for SIGNUP - Controllo che l'utente inserica i dati neccessari per lo SignUp
 schema.statics.signUp = async function (email, password){
 
     if(!isEmail(email)){
@@ -67,10 +67,10 @@ schema.statics.signUp = async function (email, password){
 
 }
 
-//Static for LOGIN
+//Static for LOGIN - Controllo per il login, come per lo signup
 schema.statics.logIn = async function (email, password){
 
-    const user = await this.findOne({email}).populate('team', 'name nickname level attacks type id image staticPokemonId description');
+    const user = await this.findOne({email}).populate('team', 'name nickname level attacks type id image staticPokemonId description'); //Populate che serve affinché l'utente abbia sempre al suo interno il suo team, quando effettua il login
     const passwordMatch = await comparePassword(password, user.password);
     if(!user || !passwordMatch) {
         const error = new Error('Incorrect email or password')

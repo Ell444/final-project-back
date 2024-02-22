@@ -10,11 +10,11 @@ const router = express.Router();
 
 router.get('/random', async (req, res) => {
     try {
-        const count = await PokemonStatic.countDocuments();
-        const randomIndex = Math.floor(Math.random() * count);
-        const randomPokemon = await PokemonStatic.findOne().skip(randomIndex);
+        const count = await PokemonStatic.countDocuments(); //conto tutti i sp che ho nel database
+        const randomIndex = Math.floor(Math.random() * count); //faccio un math.random 
+        const randomPokemon = await PokemonStatic.findOne().skip(randomIndex); 
         const encounter = new PokemonEncounter({
-            PokemonStaticId: randomPokemon._id
+            PokemonStaticId: randomPokemon._id //assegno l'id del pokemon statico al pokemon randomico
         });
         await encounter.save();
         res.status(200).send({ 
@@ -27,7 +27,7 @@ router.get('/random', async (req, res) => {
     }
 });
 
-//POST per cattiurare pokemon e salvarlo dentro lo user
+//POST per catturare pokemon e salvarlo dentro lo user
 router.post('/capture/:userId', async (req, res) => {
     
     try{
@@ -49,10 +49,10 @@ router.post('/capture/:userId', async (req, res) => {
         staticPokemonId: _id,
         
        })
-       user.team.push(cp._id);
-       await user.save();
+       user.team.push(cp._id); //faccio un push dell'id del cp nel team dello usero
+       await user.save(); //salvo lo user col suo team
        const userResponse = await User.findById(userId)
-       .populate('team', 'name level attacks nickname type description');
+       .populate('team', 'name level attacks nickname type description'); //popolo la proprieta team dello user col cp
        res.send(userResponse);
     }catch(error) {
         console.error(error);
